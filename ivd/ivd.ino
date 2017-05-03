@@ -23,17 +23,22 @@ File logFile;
 void setup() {
     // connect at 115200 so we can read the GPS fast enough
     Serial.begin(115200);
-    while (!Serial); // wait for leo to be ready
+    //while (!Serial); // wait for leo to be ready
+    delay(5000);
+
+    pinMode(VOLTAGE_PIN, INPUT);
+    pinMode(CURRENT_PIN, INPUT);
 
     // SD card: pin 10 for chip select, 11 for MOSI, 12 for MISO and 13 for SCK
     //if (!SD.begin(10)) {
     if (!SD.begin(10, 11, 12, 13)) {
         Serial.println("SD initialization failed!");
-        return;
+        while(1);
     }
     logFile = SD.open("data.csv", FILE_WRITE);
     if (!logFile) {
         Serial.println("Failed to open log file!");
+        while(1);
     }
     
     // 9600 NMEA is the default baud rate for Adafruit MTK GPS's
@@ -51,9 +56,6 @@ void setup() {
     // For the parsing code to work nicely and have time to sort thru the data, and
     // print it out we don't suggest using anything higher than 1 Hz    
     delay(1000);
-    
-    pinMode(VOLTAGE_PIN, INPUT);
-    pinMode(CURRENT_PIN, INPUT);
 }
 
 void log_data(float latitude, float longitude, float speed, float angle, float altitude, float voltage, float current) {
