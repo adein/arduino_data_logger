@@ -63,19 +63,19 @@ void log_data(float latitude, float longitude, float speed, float angle, float a
     if (logFile) {
         logFile.print(time);
         logFile.print(", ");
-        logFile.print(latitude, 4);
+        logFile.print(latitude, 8);
         logFile.print(", ");
-        logFile.print(longitude, 4);
+        logFile.print(longitude, 8);
         logFile.print(", ");
-        logFile.print(speed, 2);
+        logFile.print(speed, 4);
         logFile.print(", ");
-        logFile.print(angle, 2);
+        logFile.print(angle, 4);
         logFile.print(", ");
-        logFile.print(altitude, 2);
+        logFile.print(altitude, 4);
         logFile.print(", ");
-        logFile.print(voltage, 2);
+        logFile.print(voltage, 4);
         logFile.print(", ");
-        logFile.println(current, 2);
+        logFile.println(current, 4);
         logFile.flush();
     }
 
