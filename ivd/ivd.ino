@@ -18,7 +18,6 @@
 Adafruit_GPS *gps;
 uint32_t timer = millis();
 File logFile;
-char outputBuffer[80];
 
 
 void setup() {
@@ -70,9 +69,10 @@ void loop() {
           return;  // we can fail to parse a sentence in which case we should just wait for another
     }
   
-    // if millis() or timer wraps around, we'll just reset it
+    // If millis() or timer wraps around, we'll just reset it
     if (timer > millis())  timer = millis();
-  
+
+    // Log on an interval
     if (millis() - timer > LOGGING_DELAY) {
         timer = millis(); // reset the timer
         float voltage = 0.0;  // calculated voltage
@@ -99,16 +99,29 @@ void loop() {
         current = (((float)currentValue * V_REF) / ADC_STATES - CURRENT_OFFSET) * CURRENT_MULTIPLIER;
 
         //log_data(latitude, longitude, speed, angle, altitude, voltage, current);
-        print_data(latitude, longitude, speed, angle, altitude, voltage, current);
-        //print_gps();
+        //print_data(latitude, longitude, speed, angle, altitude, voltage, current);
+        print_gps();
     }
 }
 
 void log_data(float latitude, float longitude, float speed, float angle, float altitude, float voltage, float current) {
     if (logFile) {
         unsigned long time = millis();
-        sprintf(outputBuffer, "%10d, %12.8f, %12.8f, %8.4f, %8.4f, %8.4f, %8.4f, %8.4f", time, latitude, longitude, speed, angle, altitude, voltage, current);
-        logFile.println(outputBuffer);
+        logFile.print(time);
+        logFile.print(", ");
+        logFile.print(latitude, 12);
+        logFile.print(", ");
+        logFile.print(longitude, 12);
+        logFile.print(", ");
+        logFile.print(speed, 8);
+        logFile.print(", ");
+        logFile.print(angle, 8);
+        logFile.print(", ");
+        logFile.print(altitude, 8);
+        logFile.print(", ");
+        logFile.print(voltage, 8);
+        logFile.print(", ");
+        logFile.println(current, 8);
     }
 }
 
@@ -120,8 +133,21 @@ void flush_log() {
 
 void print_data(float latitude, float longitude, float speed, float angle, float altitude, float voltage, float current) {
     unsigned long time = millis();
-    sprintf(outputBuffer, "%10d, %12.8f, %12.8f, %8.4f, %8.4f, %8.4f, %8.4f, %8.4f", time, latitude, longitude, speed, angle, altitude, voltage, current);
-    Serial.println(outputBuffer);
+    Serial.print(time);
+    Serial.print(", ");
+    Serial.print(latitude, 12);
+    Serial.print(", ");
+    Serial.print(longitude, 12);
+    Serial.print(", ");
+    Serial.print(speed, 8);
+    Serial.print(", ");
+    Serial.print(angle, 8);
+    Serial.print(", ");
+    Serial.print(altitude, 8);
+    Serial.print(", ");
+    Serial.print(voltage, 8);
+    Serial.print(", ");
+    Serial.println(current, 8);
 }
 
 void print_gps() {
